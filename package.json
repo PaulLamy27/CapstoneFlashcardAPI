@@ -1,0 +1,19 @@
+{
+  "name": "capstoneflashcardapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PaulLamy27/CapstoneFlashcardAPI.git"
+  },
+  "author": "Paul Lamy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PaulLamy27/CapstoneFlashcardAPI/issues"
+  },
+  "homepage": "https://github.com/PaulLamy27/CapstoneFlashcardAPI#readme"
+}
