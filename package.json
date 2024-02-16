@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npm run dev"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,17 @@
   "bugs": {
     "url": "https://github.com/PaulLamy27/CapstoneFlashcardAPI/issues"
   },
-  "homepage": "https://github.com/PaulLamy27/CapstoneFlashcardAPI#readme"
+  "homepage": "https://github.com/PaulLamy27/CapstoneFlashcardAPI#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.4",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.9.1",
+    "node": "^21.6.1",
+    "nodemon": "^3.0.3"
+  }
 }
