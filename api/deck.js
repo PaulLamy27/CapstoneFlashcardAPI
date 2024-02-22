@@ -7,16 +7,16 @@ const router = require('express').Router();
 router.get('/deckTitle/:deckTitle', async (req, res) => {
     try {
         const deckTitle = req.params.deckTitle;
-        let userId = ''
-        try {
-            const cookie = req.cookies.token;
-            const decodedCookie = jwt.verify(cookie, "jwt-secret-key");
-            userId = decodedCookie.id;
-        }
-        catch { }
+
+        const cookie = req.cookies.token;
+        const decodedCookie = jwt.verify(cookie, "jwt-secret-key");
+        userId = decodedCookie.id;
+
+        // const sql = 'SELECT id, side1, side2, pronunciation, priority FROM cards WHERE deckId = (SELECT id FROM deck WHERE title = ?)'
 
         // SELECT cards.id, cards.side1, cards.side2, cards.pronunciation, priority.priority as priority FROM cards, priority WHERE priority.cardId = cards.id AND deckId = 31 ORDER BY priority DESC;
-        const sql = `SELECT cards.id, cards.side1, cards.side2, cards.pronunciation, priority.priority FROM cards, priority WHERE priority.cardId = cards.id AND deckId = (SELECT id FROM deck WHERE title = ? AND (userId = ? OR isPublic = 1)) ORDER BY id DESC`;
+        const sql = 'SELECT id, side1, side2, pronunciation, priority FROM cards WHERE deckId = (SELECT id FROM deck WHERE title = ?) ORDER BY id DESC'
+        // const sql = `SELECT cards.id, cards.side1, cards.side2, cards.pronunciation, priority.priority FROM cards, priority WHERE priority.cardId = cards.id AND deckId = (SELECT id FROM deck WHERE title = ? AND (userId = ? OR isPublic = 1)) ORDER BY id DESC`;
         db.query(sql, [deckTitle, userId], (error, results) => {
             if (error) {
                 console.log("The followin error occured at deck /getcards/:deckTitle AFTER the Query : ", error);
@@ -42,15 +42,14 @@ router.get('/studyDeck/:deckTitle', async (req, res) => {
     try {
         const deckTitle = req.params.deckTitle;
         let userId = ''
-        try {
-            const cookie = req.cookies.token;
-            const decodedCookie = jwt.verify(cookie, "jwt-secret-key");
-            userId = decodedCookie.id;
-        }
-        catch { }
+
+        const cookie = req.cookies.token;
+        const decodedCookie = jwt.verify(cookie, "jwt-secret-key");
+        userId = decodedCookie.id;
+
 
         // SELECT cards.id, cards.side1, cards.side2, cards.pronunciation, priority.priority as priority FROM cards, priority WHERE priority.cardId = cards.id AND deckId = 31 ORDER BY priority DESC;
-        const sql = `SELECT cards.id, cards.side1, cards.side2, cards.pronunciation, priority.priority as priority FROM cards, priority WHERE priority.cardId = cards.id AND deckId = (SELECT id FROM deck WHERE title = ?)  ORDER BY priority ASC;`;
+        const sql = `SELECT cards.id, cards.side1, cards.side2, cards.pronunciation, priority.priority as priority FROM cards, priority WHERE priority.cardId = cards.id AND deckId = (SELECT id FROM deck WHERE title = ?) ORDER BY priority ASC;`;
         db.query(sql, [deckTitle], (error, results) => {
             if (error) {
                 console.log("The followin error occured at deck /getcards/:deckTitle AFTER the Query : ", error);
@@ -77,18 +76,14 @@ router.get('/user', cors(), async (req, res) => {
     try {
         res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
         res.header('Access-Control-Allow-Credentials', true);
-        console.log("req.cookies: ", req.cookies);
         const userIdCookie = req.cookies.token;
 
         if (userIdCookie) {
             console.log("userIdCookie is: ", userIdCookie);
             try {
                 const decodedCookie = jwt.verify(userIdCookie, "jwt-secret-key");
-
-                console.log("decodedCookie: ", decodedCookie);
                 const userId = decodedCookie.id;
-                console.log("userId AFTER DECODING: ", userId);
-                const sql = `SELECT * FROM deck WHERE userId = ?`;
+                const sql = `SELECT title, isPublic FROM deck WHERE userId = ?`;
 
                 // pass in the SQL query and the deckId, and run a function that with error or results as params
                 db.query(sql, [userId], (error, results) => {
@@ -96,26 +91,21 @@ router.get('/user', cors(), async (req, res) => {
                         console.log("The followin error occured at deck /:id AFTER the Query : ", error);
                         res.status(500).json({ message: "Error occured Inside of Query" });
                     } else {
-                        // if successful, `results` is an object;
-                        // filter the obect to Extract specific fields from the results
                         const extractedResults = results.map(row => ({
-                            title: row.title
+                            title: row.title,
+                            isPublic: row.isPublic
                         }));
-                        console.log("Type of extractedResults: ", typeof (extractedResults));
-                        // send the object with desired values to JSON.
-                        res.json(extractedResults);
+                        res.status(201).json(extractedResults);
                     }
                 });
             } catch (error) {
-                console.error("Error verifying JWT:", error);
-                // Handle the error appropriately (e.g., send an error response)
+                res.status(500).json({ message: "Error verifying JWT:" }).end();
             }
         } else {
-            console.log("No userIdCookie ");
+            res.status(500).json({ message: "No userIdCookie" }).end();
         }
 
     } catch (error) {
-        console.log("The followin error occured at deck /:id/:title : ", error);
         res.status(500).json({ message: "Error occured" }).end();
     }
 });
@@ -203,7 +193,7 @@ router.post('/new/:title', cors(), async (req, res) => {
                         res.status(500).json({ message: "Error occured Inside of Query" });
                     } else {
                         // The query executed successfully
-                        res.json({ message: 'Data inserted successfully' });
+                        res.status(201).json({ message: 'Data inserted successfully' });
                     }
                 })
             } catch (error) {
@@ -314,7 +304,7 @@ router.delete('/:title', async (req, res) => {
         sql = 'DELETE FROM deck WHERE title = ? AND userId = ?';
         params = [title, userId];
 
-        db.query(sql, params,  (err, result) => {
+        db.query(sql, params, (err, result) => {
             if (err) {
                 console.log(err);
                 return res.status(500).json({ message: "Internal Server Error" });
