@@ -5,7 +5,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-router.post('/login', async (req, res) => {
+router.post('/login', cors(), async (req, res) => {
     const sql = 'SELECT * FROM user WHERE email = ?';
     db.query(sql, [req.body.email], (err, data) => {
         if (err) return res.json({ Error: "Login error in server" });

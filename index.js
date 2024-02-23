@@ -59,7 +59,7 @@ db.connect((err) => {
 app.use('/api/deck', DeckRoutes);
 app.use('/api/registration', RegistrationRoutes);
 
-app.post('/login', async (req, res) => {
+app.post('/login', cors(), async (req, res) => {
     const sql = 'SELECT * FROM user WHERE username = ?';
     db.query(sql, [req.body.username], (err, data) => {
         if (err) return res.json({ Error: "Login error in server" });
