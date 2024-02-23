@@ -38,7 +38,8 @@ const RegistrationRoutes = require('./api/registration');
 
 app.use(cors({
     origin: true,
-    methods: ["POST", "GET", "DELETE"],
+    methods: '*',
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
 // app.use(cors());
@@ -62,6 +63,7 @@ app.use('/api/registration', RegistrationRoutes);
 app.post('/login', cors(), async (req, res) => {
     res.header('Access-Control-Allow-Origin', req.headers.origin);
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Credentials', true);
     const sql = 'SELECT * FROM user WHERE username = ?';
     db.query(sql, [req.body.username], (err, data) => {
         if (err) return res.json({ Error: "Login error in server" });
