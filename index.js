@@ -60,6 +60,8 @@ app.use('/api/deck', DeckRoutes);
 app.use('/api/registration', RegistrationRoutes);
 
 app.post('/login', cors(), async (req, res) => {
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     const sql = 'SELECT * FROM user WHERE username = ?';
     db.query(sql, [req.body.username], (err, data) => {
         if (err) return res.json({ Error: "Login error in server" });
@@ -112,10 +114,10 @@ const verifyUser = (req, res, next) => {
 }
 
 app.get('/', verifyUser, (req, res) => {
-    return res.json({ Status: "Success", id: req.id, username: req.username})
+    return res.json({ Status: "Success", id: req.id, username: req.username })
 })
 
-app.get('/test',cors(), (req, res) => {
+app.get('/test', cors(), (req, res) => {
     res.status(200).json('Welcome, api is up on vercel');
 });
 

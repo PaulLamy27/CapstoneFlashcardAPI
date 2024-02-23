@@ -3,9 +3,11 @@ const db = require('../db_config');
 const app = express();
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');``
 
 router.post('/login', cors(), async (req, res) => {
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     const sql = 'SELECT * FROM user WHERE email = ?';
     db.query(sql, [req.body.email], (err, data) => {
         if (err) return res.json({ Error: "Login error in server" });
