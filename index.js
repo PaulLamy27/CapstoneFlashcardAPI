@@ -60,6 +60,8 @@ db.connect((err) => {
 app.use('/api/deck', DeckRoutes);
 app.use('/api/registration', RegistrationRoutes);
 
+// Enable CORS for the /login route
+app.options('/login', cors()); // Handle preflight request
 app.post('/login', cors(), async (req, res) => {
     res.header('Access-Control-Allow-Origin', req.headers.origin);
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
