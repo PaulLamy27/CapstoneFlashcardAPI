@@ -81,7 +81,7 @@ app.post('/login', cors(), async (req, res) => {
                     res.cookie('token', token, {
                         secure: true,
                         httpOnly: true,
-                        sameSite: 'lax'
+                        sameSite: 'none'
                     });
                     return res.json({ Status: "Success", username: name1 });
                 }
