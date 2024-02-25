@@ -81,7 +81,6 @@ app.post('/login', cors(), async (req, res) => {
                     console.log("Username:", name1);
                     const token = jwt.sign({ id: name, username: name1 }, "jwt-secret-key", { expiresIn: "1d" });
                     res.cookie('token', token, {
-                        secure: true,
                         httpOnly: true,
                         sameSite: 'none'
                     });
