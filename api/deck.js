@@ -7,6 +7,7 @@ const router = require('express').Router();
 router.get('/deckTitle/:deckTitle', async (req, res) => {
     try {
         const deckTitle = req.params.deckTitle;
+        console.log(deckTitle);
 
         const cookie = req.cookies.token;
         const decodedCookie = jwt.verify(cookie, "jwt-secret-key");
