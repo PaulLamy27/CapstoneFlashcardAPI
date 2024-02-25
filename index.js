@@ -70,27 +70,51 @@ app.post('/login', cors(), async (req, res) => {
     db.query(sql, [req.body.username], (err, data) => {
         if (err) return res.json({ Error: "Login error in server" });
         if (data.length > 0) {
+            const name = data[0].id;
+            const name1 = data[0].username;
+            console.log("name: ", name);
+            console.log("name1: ", name1);
             bcrypt.compare(req.body.password.toString(), data[0].password, (err, response) => {
-                console.log("Hashed Password from Database:", data[0].password);
-                console.log("Password Sent during Login:", req.body.password.toString());
-                if (err) return res.json({ Error: "Password compare error" });
-                if (response) {
-                    const name = data[0].id;
-                    const name1 = data[0].username;
-                    console.log("User id:", name);
-                    console.log("Username:", name1);
+                if (err) {
+                    console.log("Logging in did not work; error: ", err);
+                    res.status(500);
+                } else {
+                    // If login is successful, get the user's account ID
+                    console.log("so far so good");
+
+                    // create a JWT as a string that contains the user id and username
+                    // secret is the secret key that only the server knows 
                     const token = jwt.sign({ id: name, username: name1 }, "jwt-secret-key", { expiresIn: "1d" });
-                    res.cookie('token', token, {
-                        secure: true,
-                        httpOnly: true,
-                        sameSite: 'none'
-                    });
-                    return res.json({ Status: "Success", username: name1 });
-                }
-                else {
-                    return res.json({ Error: "Password not matched" });
+
+                    // set an HTTP respponse header to create a new cookie in client's browser
+                    // user_token is the actualy token, httpOnly is a security measure
+                    res.setHeader('Set-Cookie', `user_token=${token}; HttpOnly;`);
+
+                    // send response
+                    res.json({ name, token });
                 }
             })
+            // bcrypt.compare(req.body.password.toString(), data[0].password, (err, response) => {
+            //     console.log("Hashed Password from Database:", data[0].password);
+            //     console.log("Password Sent during Login:", req.body.password.toString());
+            //     if (err) return res.json({ Error: "Password compare error" });
+            //     if (response) {
+            //         const name = data[0].id;
+            //         const name1 = data[0].username;
+            //         console.log("User id:", name);
+            //         console.log("Username:", name1);
+            //         const token = jwt.sign({ id: name, username: name1 }, "jwt-secret-key", { expiresIn: "1d" });
+            //         res.cookie('token', token, {
+            //             secure: true,
+            //             httpOnly: true,
+            //             sameSite: 'none'
+            //         });
+            //         return res.json({ Status: "Success", username: name1 });
+            //     }
+            //     else {
+            //         return res.json({ Error: "Password not matched" });
+            //     }
+            // })
         }
         else {
             return res.json({ Error: "No username existed" });
@@ -110,7 +134,9 @@ const verifyUser = (req, res, next) => {
             }
             else {
                 req.id = decoded.id;
+                console.log("req.id: ", req.id);
                 req.username = decoded.username
+                console.log("req.username: ", req.username);
                 next();
             }
         })
