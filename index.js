@@ -123,16 +123,21 @@ app.post('/login', cors(), async (req, res) => {
 })
 
 const verifyUser = (req, res, next) => {
-    const token = req.cookies.user_token;
-    if (!token) {
+    console.log("begin verifyUser");
+    const user_token = req.cookies.user_token;
+    if (!user_token) {
+        console.log("You are not authenticated");
         return res.json({ Error: "You are not authenticated" });
     }
     else {
-        jwt.verify(token, "jwt-secret-key", (err, decoded) => {
+        console.log("user_token exists.");
+        jwt.verify(user_token, "jwt-secret-key", (err, decoded) => {
             if (err) {
+                console.log("Token is not correct");
                 return res.json({ Error: "Token is not correct" });
             }
             else {
+                console.log("Token was decded.");
                 req.id = decoded.id;
                 console.log("req.id: ", req.id);
                 req.username = decoded.username
@@ -153,7 +158,7 @@ app.get('/test', cors(), (req, res) => {
 
 app.get('/logout', (req, res) => {
     try {
-        res.clearCookie('token');
+        res.clearCookie('user_token');
         return res.json({ Status: "Success" });
     } catch (error) {
         console.error('Error during logout:', error);
