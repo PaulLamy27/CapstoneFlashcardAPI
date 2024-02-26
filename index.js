@@ -123,7 +123,7 @@ app.post('/login', cors(), async (req, res) => {
 })
 
 const verifyUser = (req, res, next) => {
-    const token = req.cookies.token;
+    const token = req.cookies.user_token;
     if (!token) {
         return res.json({ Error: "You are not authenticated" });
     }
