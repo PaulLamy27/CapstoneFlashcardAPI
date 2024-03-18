@@ -39,6 +39,7 @@ router.get('/deckTitle/:deckTitle', async (req, res) => {
     }
 });
 
+// pull cards to study a deck using deckTitle
 router.get('/studyDeck/:deckTitle', async (req, res) => {
     try {
         const deckTitle = req.params.deckTitle;
@@ -48,9 +49,11 @@ router.get('/studyDeck/:deckTitle', async (req, res) => {
         const decodedCookie = jwt.verify(cookie, "jwt-secret-key");
         userId = decodedCookie.id;
 
+        console.log("userId: ", userId);
 
         // SELECT cards.id, cards.side1, cards.side2, cards.pronunciation, priority.priority as priority FROM cards, priority WHERE priority.cardId = cards.id AND deckId = 31 ORDER BY priority DESC;
-        const sql = `SELECT cards.id, cards.side1, cards.side2, cards.pronunciation, priority.priority as priority FROM cards, priority WHERE priority.cardId = cards.id AND deckId = (SELECT id FROM deck WHERE title = ?) ORDER BY priority ASC;`;
+        const sql = 'SELECT id, side1, side2, pronunciation, priority FROM cards WHERE deckId = (SELECT id FROM deck WHERE title = ?)';
+        //const sql = `SELECT cards.id, cards.side1, cards.side2, cards.pronunciation, priority.priority as priority FROM cards, priority WHERE priority.cardId = cards.id AND deckId = (SELECT id FROM deck WHERE title = ?) ORDER BY priority ASC;`;
         db.query(sql, [deckTitle], (error, results) => {
             if (error) {
                 console.log("The followin error occured at deck /getcards/:deckTitle AFTER the Query : ", error);
