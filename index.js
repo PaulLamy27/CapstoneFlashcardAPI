@@ -212,7 +212,7 @@ app.get('/test', cors(), (req, res) => {
     res.status(200).json('Welcome, api is up on vercel');
 });
 
-app.get('/logout', (req, res) => {
+app.post('/logout', (req, res) => {
     try {
         res.clearCookie('user_token');
         return res.json({ Status: "Success" });
