@@ -113,35 +113,63 @@ app.post('/login', cors(), async (req, res) => {
     res.header('Access-Control-Allow-Origin', req.headers.origin);
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     res.header('Access-Control-Allow-Credentials', true);
-    const sql = 'SELECT * FROM user WHERE email = ?';
-    db.query(sql, [req.body.email], (err, data) => {
+    const sql = 'SELECT * FROM user WHERE username = ?';
+    db.query(sql, [req.body.username], (err, data) => {
         if (err) return res.json({ Error: "Login error in server" });
         if (data.length > 0) {
-            if (req.body.password === data[0].password) {
-                // const name = data[0].id;
-                // const name1 = data[0].username;
-                // console.log(name1);
-                // const token = jwt.sign({ id: name }, "jwt-secret-key", { expiresIn: "1d" });
-                // res.cookie('token', token, {
-                //     secure: true,
-                //     httpOnly: true,
-                //     sameSite: 'lax'
-                // });
-                // return res.json({ Status: "Success", username: name1 });
-                // create a JWT as a string that contains the user id and username
-                // secret is the secret key that only the server knows 
-                const token = jwt.sign({ id: data[0].id, username: data[0].username }, 'secret');
+            // if (req.body.password === data[0].password) {
+            //     // const name = data[0].id;
+            //     // const name1 = data[0].username;
+            //     // console.log(name1);
+            //     // const token = jwt.sign({ id: name }, "jwt-secret-key", { expiresIn: "1d" });
+            //     // res.cookie('token', token, {
+            //     //     secure: true,
+            //     //     httpOnly: true,
+            //     //     sameSite: 'lax'
+            //     // });
+            //     // return res.json({ Status: "Success", username: name1 });
+            //     // create a JWT as a string that contains the user id and username
+            //     // secret is the secret key that only the server knows 
+            //     const token = jwt.sign({ id: data[0].id, username: data[0].username }, 'secret');
 
-                // set an HTTP respponse header to create a new cookie in client's browser
-                // user_token is the actualy token, httpOnly is a security measure
-                res.setHeader('Set-Cookie', `user_token=${token}; HttpOnly;`);
+            //     // set an HTTP respponse header to create a new cookie in client's browser
+            //     // user_token is the actualy token, httpOnly is a security measure
+            //     // res.setHeader('Set-Cookie', `user_token=${token}; HttpOnly;`);
+            //     res.cookie('token', token, {
+            //         secure: true,
+            //         httpOnly: true,
+            //         sameSite: 'lax'
+            //     });
 
-                // send response
-                res.json({ user, token });
-            }
-            else {
-                return res.json({ Error: "Password not matched" });
-            }
+            //     // send response
+            //     res.json({ Status: "Success", user, token });
+            // }
+            // else {
+            //     return res.json({ Error: "Password not matched" });
+            // }
+            bcrypt.compare(req.body.password.toString(), data[0].password, (err, response) => {
+                console.log("Hashed Password from Database:", data[0].password);
+                console.log("Password Sent during Login:", req.body.password.toString());
+                if (err) return res.json({ Error: "Password compare error" });
+                if (response) {
+                    const name = data[0].id;
+                    const name1 = data[0].username;
+                    const password = data[0].password;
+                    console.log("User id:", name);
+                    console.log("Username:", name1);
+                    console.log("password:", password);
+                    const token = jwt.sign({ id: name, username: name1 }, "jwt-secret-key", { expiresIn: "1d" });
+                    res.cookie('token', token, {
+                        secure: true,
+                        httpOnly: true,
+                        sameSite: 'lax'
+                    });
+                    return res.json({ Status: "Success", token: token, username: name1 });
+                }
+                else {
+                    return res.json({ Error: "Password not matched" });
+                }
+            })
         }
         else {
             return res.json({ Error: "No email existed" });
@@ -151,7 +179,8 @@ app.post('/login', cors(), async (req, res) => {
 
 const verifyUser = (req, res, next) => {
     console.log("begin verifyUser");
-    const token = req.cookie;
+    const token = req.cookies.token;
+    console.log("token: ", token);
     if (!token) {
         console.log("You are not authenticated");
         return res.json({ Error: "You are not authenticated" });
