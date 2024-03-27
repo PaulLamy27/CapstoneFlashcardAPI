@@ -152,6 +152,7 @@ app.post('/login', cors(), async (req, res) => {
                 console.log("Password Sent during Login:", req.body.password.toString());
                 if (err) return res.json({ Error: "Password compare error" });
                 if (response) {
+                    console.log("data[0]: ", data[0]);
                     const name = data[0].id;
                     const name1 = data[0].username;
                     const password = data[0].password;
