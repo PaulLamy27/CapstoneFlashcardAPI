@@ -79,7 +79,6 @@ router.get('/studyDeck/:deckTitle', async (req, res) => {
 router.get('/user/:userId', cors(), async (req, res) => {
     try {
         res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Origin', 'http://localhost:5173/');
         res.header('Access-Control-Allow-Credentials', true);
         const userId = req.params.userId;
 
