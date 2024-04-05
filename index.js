@@ -119,7 +119,7 @@ app.post('/login', cors(), async (req, res) => {
         if (data.length > 0) {
             // if (req.body.password === data[0].password) {
             //     // const name = data[0].id;
-            //     // const name1 = data[0].username;
+            //     // const name1 = data[0].username;`
             //     // console.log(name1);
             //     // const token = jwt.sign({ id: name }, "jwt-secret-key", { expiresIn: "1d" });
             //     // res.cookie('token', token, {
@@ -153,19 +153,20 @@ app.post('/login', cors(), async (req, res) => {
                 if (err) return res.json({ Error: "Password compare error" });
                 if (response) {
                     console.log("data[0]: ", data[0]);
-                    const name = data[0].id;
-                    const name1 = data[0].username;
+                    const userId = data[0].id;
+                    const username = data[0].username;
                     const password = data[0].password;
-                    console.log("User id:", name);
-                    console.log("Username:", name1);
+                    console.log("User id:", userId);
+                    console.log("Username:", username);
                     console.log("password:", password);
-                    const token = jwt.sign({ id: name, username: name1 }, "jwt-secret-key", { expiresIn: "1d" });
+                    const token = jwt.sign({ id: userId, username: username }, "jwt-secret-key", { expiresIn: "1d" });
                     res.cookie('token', token, {
                         secure: true,
                         httpOnly: true,
                         sameSite: 'lax'
                     });
-                    return res.json({ Status: "Success", token: token, username: name1 });
+                    console.log("token (on backend): ", token);
+                    return res.json({ Status: "Success", token: token, username: username });
                 }
                 else {
                     return res.json({ Error: "Password not matched" });
@@ -178,36 +179,36 @@ app.post('/login', cors(), async (req, res) => {
     })
 })
 
-const verifyUser = (req, res, next) => {
-    console.log("begin verifyUser");
-    const token = req.cookies.token;
-    console.log("token: ", token);
-    if (!token) {
-        console.log("You are not authenticated");
-        return res.json({ Error: "You are not authenticated" });
-    }
-    else {
-        console.log("user_token exists.");
-        jwt.verify(token, "jwt-secret-key", (err, decoded) => {
-            if (err) {
-                console.log("Token is not correct");
-                return res.json({ Error: "Token is not correct" });
-            }
-            else {
-                console.log("Token was decded.");
-                req.id = decoded.id;
-                console.log("req.id: ", req.id);
-                req.username = decoded.username
-                console.log("req.username: ", req.username);
-                next();
-            }
-        })
-    }
-}
+// const verifyUser = (req, res, next) => {
+//     console.log("begin verifyUser");
+//     const token = req.cookies.token;
+//     console.log("token: ", token);
+//     if (!token) {
+//         console.log("You are not authenticated");
+//         return res.json({ Error: "You are not authenticated" });
+//     }
+//     else {
+//         console.log("user_token exists.");
+//         jwt.verify(token, "jwt-secret-key", (err, decoded) => {
+//             if (err) {
+//                 console.log("Token is not correct");
+//                 return res.json({ Error: "Token is not correct" });
+//             }
+//             else {
+//                 console.log("Token was decded.");
+//                 req.id = decoded.id;
+//                 console.log("req.id: ", req.id);
+//                 req.username = decoded.username
+//                 console.log("req.username: ", req.username);
+//                 next();
+//             }
+//         })
+//     }
+// }
 
-app.get('/', verifyUser, (req, res) => {
-    return res.json({ Status: "Success", id: req.id, username: req.username })
-})
+// app.get('/', verifyUser, (req, res) => {
+//     return res.json({ Status: "Success", id: req.id, username: req.username })
+// })
 
 app.get('/test', cors(), (req, res) => {
     res.status(200).json('Welcome, api is up on vercel');

@@ -76,17 +76,16 @@ router.get('/studyDeck/:deckTitle', async (req, res) => {
 });
 
 // pull decks that correspond to a user ID
-router.get('/user', cors(), async (req, res) => {
+router.get('/user/:userId', cors(), async (req, res) => {
     try {
-        res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Origin', 'http://localhost:5173/');
         res.header('Access-Control-Allow-Credentials', true);
-        const userIdCookie = req.cookies.token;
+        const userId = req.params.userId;
 
-        if (userIdCookie) {
-            console.log("userIdCookie is: ", userIdCookie);
+        if (userId) {
+            console.log("userId is: ", userId);
             try {
-                const decodedCookie = jwt.verify(userIdCookie, "jwt-secret-key");
-                const userId = decodedCookie.id;
                 const sql = `SELECT title, isPublic FROM deck WHERE userId = ?`;
 
                 // pass in the SQL query and the deckId, and run a function that with error or results as params
