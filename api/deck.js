@@ -4,14 +4,11 @@ const jwt = require('jsonwebtoken');
 const router = require('express').Router();
 
 // pull cards from a deck using deckTitle
-router.get('/deckTitle/:deckTitle', async (req, res) => {
+router.get('/deckTitle/:deckTitle/:userId', async (req, res) => {
     try {
-        const deckTitle = req.params.deckTitle;
-        console.log(deckTitle);
-
-        const cookie = req.cookies.token;
-        const decodedCookie = jwt.verify(cookie, "jwt-secret-key");
-        userId = decodedCookie.id;
+        const {deckTitle, userId }= req.params;
+        console.log("deckTitle", deckTitle);
+        console.log("userId", userId);
 
         // const sql = 'SELECT id, side1, side2, pronunciation, priority FROM cards WHERE deckId = (SELECT id FROM deck WHERE title = ?)'
 
