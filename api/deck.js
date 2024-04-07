@@ -6,6 +6,9 @@ const router = require('express').Router();
 // pull cards from a deck using deckTitle
 router.get('/deckTitle/:deckTitle/:userId', async (req, res) => {
     try {
+        res.setHeader('Access-Control-Allow-Origin', 'https://capstone-flashcard-application-6aq1euwz6-paullamy27s-projects.vercel.app/');
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+
         const {deckTitle, userId }= req.params;
         console.log("deckTitle", deckTitle);
         console.log("userId", userId);
@@ -75,7 +78,9 @@ router.get('/studyDeck/:deckTitle', async (req, res) => {
 // pull decks that correspond to a user ID
 router.get('/user/:userId', cors(), async (req, res) => {
     try {
-        res.setHeader('Access-Control-Allow-Origin', true);
+        // res.header('Access-Control-Allow-Origin', 'https://capstone-flashcard-application-6aq1euwz6-paullamy27s-projects.vercel.app/');
+        res.setHeader('Access-Control-Allow-Origin', 'https://capstone-flashcard-application-6aq1euwz6-paullamy27s-projects.vercel.app/');
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
         res.setHeader('Access-Control-Allow-Credentials', true);
         const userId = req.params.userId;
 
