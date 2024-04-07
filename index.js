@@ -37,8 +37,21 @@ const LoginRoutes = require('./api/login');
 // This line is for parsing incoming JSON requests
 // app.use(express.json());
 
+// List of valid origins
+const validOrigins = [
+    'http://localhost:5173',
+    'https://capstone-flashcard-application.vercel.app/',
+    'https://capstone-flashcard-application-6aq1euwz6-paullamy27s-projects.vercel.app/',
+];
+
 app.use(cors({
-    origin: true,
+    origin: function (origin, callback) {
+        if (!origin || validOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: '*',
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
