@@ -46,14 +46,9 @@ router.get('/deckTitle/:deckTitle', async (req, res) => {
 });
 
 // pull cards to study a deck using deckTitle
-router.get('/studyDeck/:deckTitle', async (req, res) => {
+router.get('/studyDeck/:deckTitle/:userId', async (req, res) => {
     try {
-        const deckTitle = req.params.deckTitle;
-        let userId = ''
-
-        const cookie = req.cookies.token;
-        const decodedCookie = jwt.verify(cookie, "jwt-secret-key");
-        userId = decodedCookie.id;
+        const {deckTitle, userId} = req.params;
 
         console.log("userId: ", userId);
 
