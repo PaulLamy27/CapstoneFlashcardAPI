@@ -4,14 +4,20 @@ const jwt = require('jsonwebtoken');
 const router = require('express').Router();
 
 // pull cards from a deck using deckTitle
-router.get('/deckTitle/:deckTitle/:userId', async (req, res) => {
+router.get('/deckTitle/:deckTitle', async (req, res) => {
     try {
-        res.setHeader('Access-Control-Allow-Origin', 'https://capstone-flashcard-application-6aq1euwz6-paullamy27s-projects.vercel.app/');
-        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+        // res.setHeader('Access-Control-Allow-Origin', 'https://capstone-flashcard-application-6aq1euwz6-paullamy27s-projects.vercel.app/');
+        // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
 
-        const {deckTitle, userId }= req.params;
-        console.log("deckTitle", deckTitle);
-        console.log("userId", userId);
+        // const {deckTitle, userId }= req.params;
+        // console.log("deckTitle", deckTitle);
+        // console.log("userId", userId);
+        const deckTitle = req.params.deckTitle;
+        console.log(deckTitle);
+
+        const cookie = req.cookies.token;
+        const decodedCookie = jwt.verify(cookie, "jwt-secret-key");
+        userId = decodedCookie.id;
 
         // const sql = 'SELECT id, side1, side2, pronunciation, priority FROM cards WHERE deckId = (SELECT id FROM deck WHERE title = ?)'
 
