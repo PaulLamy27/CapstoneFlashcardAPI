@@ -123,7 +123,7 @@ app.use('/api/login', LoginRoutes);
 // })
 
 app.post('/login', cors(), async (req, res) => {
-    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    //res.header('Access-Control-Allow-Origin', req.headers.origin);
     // https://capstone-flashcard-application-6aq1euwz6-paullamy27s-projects.vercel.app/
     res.header('Access-Control-Allow-Origin', 'https://capstone-flashcard-application-6aq1euwz6-paullamy27s-projects.vercel.app/');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
