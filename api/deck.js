@@ -82,7 +82,7 @@ router.get('/studyDeck/:deckTitle', async (req, res) => {
 });
 
 // pull decks that correspond to a user ID
-router.get('/user/:userId', cors(), async (req, res) => {
+router.get('/user/:userId', async (req, res) => {
     try {
         
         const userId = req.params.userId;
