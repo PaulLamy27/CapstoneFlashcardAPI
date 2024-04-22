@@ -202,7 +202,7 @@ router.post('/new/:title', cors(), async (req, res) => {
 // pull all public decks
 router.get('/publicdecks', cors(), async (req, res) => {
     try {
-        res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+        res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header('Access-Control-Allow-Credentials', true);
 
         try {
