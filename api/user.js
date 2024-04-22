@@ -4,14 +4,14 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-router.get("/search", cors(), async (req, res) => {
+router.get("/search/:firstName/:lastName/:username/:email", cors(), async (req, res) => {
     try {
         res.header("Access-Control-Allow-Origin", req.headers.origin);
         res.header("Access-Control-Allow-Credentials", true);
-        const firstname = req.query.firstname ?? "";
-        const lastname = req.query.lastname ?? "";
-        const username = req.query.username ?? "";
-        const email = req.query.email ?? "";
+        const firstname = req.params.firstname ?? "";
+        const lastname = req.params.lastname ?? "";
+        const username = req.params.username ?? "";
+        const email = req.params.email ?? "";
         const sql = `SELECT id, firstName, lastname, username, email FROM user WHERE firstName LIKE '${firstname}%' AND lastname LIKE '${lastname}%' AND username LIKE '${username}%' AND email LIKE '${email}%'`;
         db.query(sql, (error, results) => {
             if (error) {
