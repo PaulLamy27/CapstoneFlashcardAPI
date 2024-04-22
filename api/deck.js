@@ -159,7 +159,7 @@ router.post('/prio/:cardId/:userId', async (req, res) => {
 router.post('/new/:title', cors(), async (req, res) => {
     console.log("");
     try {
-        res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+        res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header('Access-Control-Allow-Credentials', true);
         console.log("req.cookies: ", req.cookies);
         const title = decodeURIComponent(req.params.title);
@@ -204,7 +204,7 @@ router.post('/:title/card', async (req, res) => {
     const side1 = req.query.side1;
     const side2 = req.query.side2;
     const pronunciation = req.query.pronunciation;
-    res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
     res.header('Access-Control-Allow-Credentials', true);
     if (side1 && side2 && !pronunciation) {
         try {
@@ -254,7 +254,7 @@ router.post('/:title/card', async (req, res) => {
 router.post('/:title', async (req, res) => {
     let title = req.params.title;
     let isPublic = req.query.isPublic;
-    res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
     res.header('Access-Control-Allow-Credentials', true);
     try {
         let cookie = req.cookies.token;
@@ -282,7 +282,7 @@ router.delete('/:title', async (req, res) => {
     const title = req.params.title;
 
     try {
-        res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+        res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header('Access-Control-Allow-Credentials', true);
 
         const cookie = req.cookies.token;
@@ -319,7 +319,7 @@ router.post('/card/:id', async (req, res) => {
     const side2 = req.body.side2;
     const pronunciation = req.body.pronunciation;
     console.log("request made it to .post: ", id, side1, side2, pronunciation);
-    res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
     res.header('Access-Control-Allow-Credentials', true);
     var sql = null
     var param = null
@@ -364,7 +364,7 @@ router.delete('/:title/card', async (req, res) => {
     const pronunciation = req.query.pronunciation;
 
     try {
-        res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+        res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header('Access-Control-Allow-Credentials', true);
 
         let sql, params;
