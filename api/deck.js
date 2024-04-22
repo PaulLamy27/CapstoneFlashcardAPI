@@ -13,7 +13,7 @@ router.get('/deckTitle/:deckTitle/:userId', async (req, res) => {
         // console.log("deckTitle", deckTitle);
         // console.log("userId", userId);
         const deckTitle = req.params.deckTitle;
-        const userId =  req.params.userId;
+        const userId = req.params.userId;
         console.log(deckTitle);
 
         // const sql = 'SELECT id, side1, side2, pronunciation, priority FROM cards WHERE deckId = (SELECT id FROM deck WHERE title = ?)'
@@ -45,7 +45,7 @@ router.get('/deckTitle/:deckTitle/:userId', async (req, res) => {
 // pull cards to study a deck using deckTitle
 router.get('/studyDeck/:deckTitle/:userId', async (req, res) => {
     try {
-        const {deckTitle, userId} = req.params;
+        const { deckTitle, userId } = req.params;
 
         console.log("userId: ", userId);
 
@@ -76,7 +76,7 @@ router.get('/studyDeck/:deckTitle/:userId', async (req, res) => {
 // pull decks that correspond to a user ID
 router.get('/user/:userId', async (req, res) => {
     try {
-        
+
         const userId = req.params.userId;
 
         if (userId) {
@@ -112,9 +112,9 @@ router.get('/user/:userId', async (req, res) => {
 router.post('/prio/:cardId/:userId', async (req, res) => {
     try {
         console.log("we boutta change the priority!");
-        
+
         //const userId = req.query.userId;
-        const {cardId, userId} = req.params;
+        const { cardId, userId } = req.params;
 
         if (userId) {
 
@@ -198,6 +198,42 @@ router.post('/new/:title', cors(), async (req, res) => {
         res.status(500).json({ message: "Error occured" }).end();
     }
 })
+
+// pull all public decks
+router.get('/publicdecks', cors(), async (req, res) => {
+    try {
+        res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+        res.header('Access-Control-Allow-Credentials', true);
+
+        try {
+            const sql = `SELECT * FROM deck WHERE isPublic = 1`;
+
+            // pass in the SQL query and the deckId, and run a function that with error or results as params
+            db.query(sql, (error, results) => {
+                if (error) {
+                    console.log("The followin error occured at deck /:id AFTER the Query : ", error);
+                    res.status(500).json({ message: "Error occured Inside of Query" });
+                } else {
+                    // if successful, `results` is an object;
+                    // filter the obect to Extract specific fields from the results
+                    const extractedResults = results.map(row => ({
+                        title: row.title
+                    }));
+                    console.log("Type of extractedResults: ", typeof (extractedResults));
+                    // send the object with desired values to JSON.
+                    res.json(extractedResults);
+                }
+            });
+        } catch (error) {
+            console.error("Error verifying JWT:", error);
+            // Handle the error appropriately (e.g., send an error response)
+        }
+        console.log("No userIdCookie ");
+    } catch (error) {
+        console.log("The followin error occured at deck /:id/:title : ", error);
+        res.status(500).json({ message: "Error occured" }).end();
+    }
+});
 
 router.post('/:title/card', async (req, res) => {
     const title = req.params.title;
