@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 router.get("/search", async (req, res) => {
     try {
-        res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.header("Access-Control-Allow-Origin", req.headers.origin);
         res.header("Access-Control-Allow-Credentials", true);
         const firstname = req.query.firstname ?? "";
         const lastname = req.query.lastname ?? "";
