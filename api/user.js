@@ -4,7 +4,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-router.get("/search/:firstName/:lastName/:username/:email", cors(), async (req, res) => {
+router.get("/search/:firstName/:lastName/:username/:email", async (req, res) => {
     try {
         res.header("Access-Control-Allow-Origin", req.headers.origin);
         res.header("Access-Control-Allow-Credentials", true);
