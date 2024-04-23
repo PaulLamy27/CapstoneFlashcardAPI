@@ -4,15 +4,15 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-router.get("/search/:firstName/:lastName/:username/:email", async (req, res) => {
+router.get("/search/:username?", async (req, res) => {
     try {
         res.header("Access-Control-Allow-Origin", req.headers.origin);
         res.header("Access-Control-Allow-Credentials", true);
-        const firstname = req.params.firstname ?? "";
-        const lastname = req.params.lastname ?? "";
         const username = req.params.username ?? "";
-        const email = req.params.email ?? "";
-        const sql = `SELECT id, firstName, lastname, username, email FROM user WHERE firstName LIKE '${firstname}%' AND lastname LIKE '${lastname}%' AND username LIKE '${username}%' AND email LIKE '${email}%'`;
+        // const email = req.params.email ?? "";
+        // const sql = `SELECT id, firstName, lastname, username, email FROM user WHERE firstName LIKE '${firstname}%' AND lastname LIKE '${lastname}%' AND username LIKE '${username}%' AND email LIKE '${email}%'`;
+        // const sql = `SELECT id, firstName, lastname, username, email FROM user WHERE username LIKE '${username}%' AND email LIKE '${email}%'`;
+        const sql = `SELECT id, firstName, lastname, username, email FROM user WHERE username LIKE '${username}%'`;
         db.query(sql, (error, results) => {
             if (error) {
                 console.log(
@@ -23,10 +23,8 @@ router.get("/search/:firstName/:lastName/:username/:email", async (req, res) => 
             } else {
                 const extractedResults = results.map((row) => ({
                     id: row.id,
-                    firstname: row.firstName,
-                    lastname: row.lastname,
                     username: row.username,
-                    email: row.email,
+                    // email: row.email,
                 }));
                 res.json(extractedResults);
             }
