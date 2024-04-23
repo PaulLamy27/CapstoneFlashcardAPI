@@ -16,6 +16,8 @@ router.get('/', async (req, res) => {
 
 
 router.post('/create', async (req, res) => {
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    res.header('Access-Control-Allow-Credentials', true);
     const { firstname, lastname, email, username, password } = req.body;
 
     if (firstname && lastname && email && username && password) {
@@ -25,25 +27,25 @@ router.post('/create', async (req, res) => {
 
             db.connect(function (err) {
                 db.query('INSERT INTO user (firstname, lastname, email, username, password) VALUES (?, ?, ?, ?, ?)',
-                [firstname, lastname, email, username, hashedPassword],
-                function (err, result, fields) {
-                    if (err) {
-                        console.log(err);
-                        res.send(err);
-                    }
-                    if (result) {
-                        res.header("Access-Control-Allow-Origin", "*");
-                        res.send("success");
-                        console.log("success");
-                    }
-                    if (fields) console.log(fields);
-                });
+                    [firstname, lastname, email, username, hashedPassword],
+                    function (err, result, fields) {
+                        if (err) {
+                            console.log(err);
+                            res.send(err);
+                        }
+                        if (result) {
+                            res.header("Access-Control-Allow-Origin", "*");
+                            res.send("success");
+                            console.log("success");
+                        }
+                        if (fields) console.log(fields);
+                    });
             });
         } catch (error) {
             console.error('Error hashing password:', error);
             res.status(500).send('Internal Server Error');
         }
-        
+
     } else {
         console.log('Missing a parameter');
         res.status(400).send('Bad Request: Missing a parameter');
