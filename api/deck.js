@@ -156,7 +156,7 @@ router.post('/prio/:cardId/:userId', async (req, res) => {
     }
 });
 
-router.post('/new/:title', cors(), async (req, res) => {
+router.post('/new/:title', async (req, res) => {
     console.log("");
     try {
         res.header('Access-Control-Allow-Origin', req.headers.origin);
