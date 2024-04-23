@@ -156,25 +156,18 @@ router.post('/prio/:cardId/:userId', async (req, res) => {
     }
 });
 
-router.post('/new/:title', async (req, res) => {
+router.post('/new/:title/:userId', async (req, res) => {
     console.log("");
     try {
         res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header('Access-Control-Allow-Credentials', true);
-        console.log("req.cookies: ", req.cookies);
         const title = decodeURIComponent(req.params.title);
         console.log("title: ", title);
-        const userIdCookie = req.cookies.token;
+        const { userId } = req.params;
 
-        if (userIdCookie) {
-            console.log("userIdCookie is: ", userIdCookie);
+        if (userId) {
+            console.log("userId is: ", userId);
             try {
-                const decodedCookie = jwt.verify(userIdCookie, "jwt-secret-key");
-
-                console.log("decodedCookie: ", decodedCookie);
-                const userId = decodedCookie.id;
-                console.log("userId AFTER DECODING: ", userId);
-
                 const sql = `INSERT INTO deck (userId, title) VALUES (?, ?)`;
 
                 db.query(sql, [userId, title], (error, results) => {
