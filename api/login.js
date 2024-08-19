@@ -29,6 +29,8 @@ router.post('/login', cors(), async (req, res) => {
                 // secret is the secret key that only the server knows 
                 const token = jwt.sign({ id: data[0].id, username: data[0].username }, 'secret');
 
+                console.log("token: ", token);
+
                 // set an HTTP respponse header to create a new cookie in client's browser
                 // user_token is the actualy token, httpOnly is a security measure
                 res.setHeader('Set-Cookie', `user_token=${token}; HttpOnly;`);
