@@ -14,4 +14,5 @@ ALTER TABLE deck MODIFY COLUMN isPublic BOOLEAN DEFAULT TRUE;
 describe deck;
 
 CREATE TABLE IF NOT EXISTS user (id INT NOT NULL AUTO_INCREMENT, firstName VARCHAR(50), lastName VARCHAR(50), email VARCHAR(50), username VARCHAR(50), password VARCHAR(50), PRIMARY KEY (id));
-select * from user;
+select * from user
+;

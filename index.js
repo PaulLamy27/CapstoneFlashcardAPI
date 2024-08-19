@@ -118,13 +118,14 @@ app.use('/api/login', LoginRoutes);
 
 app.post('/login', cors(), async (req, res) => {
     // allow the origin of the request
+    const saltRounds = 10;
     res.header('Access-Control-Allow-Origin', req.headers.origin);
     // https://capstone-flashcard-application-6aq1euwz6-paullamy27s-projects.vercel.app/
     // res.header('Access-Control-Allow-Origin', 'https://capstone-flashcard-application-6aq1euwz6-paullamy27s-projects.vercel.app/');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     res.header('Access-Control-Allow-Credentials', true);
     const sql = 'SELECT * FROM user WHERE username = ?';
-    db.query(sql, [req.body.username], (err, data) => {
+    db.query(sql, [req.body.username], async (err, data) => {
         if (err) return res.json({ Error: "Login error in server" });
         if (data.length > 0) {
             // if (req.body.password === data[0].password) {
@@ -157,7 +158,9 @@ app.post('/login', cors(), async (req, res) => {
             // else {
             //     return res.json({ Error: "Password not matched" });
             // }
-            bcrypt.compare(req.body.password.toString(), data[0].password, (err, response) => {
+            // console.log("req.body.password: ", req.body.password);
+            const hashedPassword = await bcrypt.hash(req.body.password.toString(), saltRounds);
+            bcrypt.compare(hashedPassword, data[0].password, (err, response) => {
                 console.log("Hashed Password from Database:", data[0].password);
                 console.log("Password Sent during Login:", req.body.password.toString());
                 if (err) return res.json({ Error: "Password compare error" });
