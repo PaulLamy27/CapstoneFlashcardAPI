@@ -160,6 +160,7 @@ app.post('/login', cors(), async (req, res) => {
             // }
             // console.log("req.body.password: ", req.body.password);
             const hashedPassword = await bcrypt.hash(req.body.password.toString(), saltRounds);
+            console.log("hashedPassword: ", hashedPassword );
             bcrypt.compare(hashedPassword, data[0].password, (err, response) => {
                 console.log("Hashed Password from Database:", data[0].password);
                 console.log("Password Sent during Login:", req.body.password.toString());
