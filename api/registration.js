@@ -16,10 +16,12 @@ router.get('/', async (req, res) => {
 
 
 router.post('/create', async (req, res) => {
+
     res.header('Access-Control-Allow-Origin', req.headers.origin);
     res.header('Access-Control-Allow-Credentials', true);
     const { firstname, lastname, email, username, password } = req.body;
-
+    console.log("firstname: ", firstname);
+    console.log("password: ", password);
     if (firstname && lastname && email && username && password) {
         console.log('Request received');
         try {
@@ -34,7 +36,6 @@ router.post('/create', async (req, res) => {
                             res.send(err);
                         }
                         if (result) {
-                            res.header("Access-Control-Allow-Origin", "*");
                             res.send("success");
                             console.log("success");
                         }
