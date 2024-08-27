@@ -17,3 +17,6 @@ CREATE TABLE IF NOT EXISTS user (id INT NOT NULL AUTO_INCREMENT, firstName VARCH
 describe user;
 ALTER TABLE user MODIFY COLUMN password VARCHAR(60);
 select * from user;
+select * from deck;
+# get all PUBLIC decks from a user
+select title from deck where isPublic and userId = (select id from user where username = "sora");

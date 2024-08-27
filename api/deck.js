@@ -228,6 +228,47 @@ router.get('/publicdecks', cors(), async (req, res) => {
     }
 });
 
+/*
+# get all PUBLIC decks made by a user
+select title from deck where isPublic and userId = (select id from user where username = "sora");
+*/
+router.get('/publicdecks/:username', cors(), async (req, res) => {
+    try {
+	const username = req.params.username;
+        res.header('Access-Control-Allow-Origin', req.headers.origin);
+        res.header('Access-Control-Allow-Credentials', true);
+
+        try {
+            const sql = `SELECT title FROM deck WHERE isPublic AND userId = (select id from user where username = ?);`;
+
+            // pass in the SQL query and the deckId, and run a function that with error or results as params
+            db.query(sql, [username], (error, results) => {
+                if (error) {
+                    console.log("The followin error occured at deck /publicdecks/:username AFTER the Query : ", error);
+                    res.status(500).json({ message: "Error occured Inside of Query" });
+                } else {
+                    // if successful, `results` is an object;
+                    // filter the obect to Extract specific fields from the results
+                    const extractedResults = results.map(row => ({
+                        title: row.title
+                    }));
+                    console.log("Type of extractedResults: ", typeof (extractedResults));
+                    // send the object with desired values to JSON.
+                    res.json(extractedResults);
+                }
+            });
+        } catch (error) {
+            console.error("Error verifying JWT:", error);
+            // Handle the error appropriately (e.g., send an error response)
+        }
+    } catch (error) {
+        console.log("The followin error occured at deck /:id/:title : ", error);
+        res.status(500).json({ message: "Error occured" }).end();
+    }
+});
+
+
+// inserting a new card
 router.post('/:title/card', async (req, res) => {
     const title = req.params.title;
     const side1 = req.query.side1;
@@ -280,6 +321,7 @@ router.post('/:title/card', async (req, res) => {
     }
 })
 
+// toggling if a deck is public or not
 router.post('/:title', async (req, res) => {
     let title = req.params.title;
     let isPublic = req.query.isPublic;
@@ -307,6 +349,7 @@ router.post('/:title', async (req, res) => {
     }
 })
 
+// delete a deck
 router.delete('/:title', async (req, res) => {
     const title = req.params.title;
 
@@ -342,6 +385,7 @@ router.delete('/:title', async (req, res) => {
     }
 });
 
+// updating a card - side1, side2, or pronunciation
 router.post('/card/:id', async (req, res) => {
     const id = decodeURIComponent(req.params.id);
     const side1 = req.body.side1;
