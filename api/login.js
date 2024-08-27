@@ -14,6 +14,9 @@ router.post('/login', cors(), async (req, res) => {
     db.query(sql, [req.body.email], (err, data) => {
         if (err) return res.json({ Error: "Login error in server" });
         if (data.length > 0) {
+            console.log("req.body.password", req.body.password);
+            console.log("data[0].password", data[0].password);
+            
             if (req.body.password === data[0].password) {
                 // const name = data[0].id;
                 // const name1 = data[0].username;

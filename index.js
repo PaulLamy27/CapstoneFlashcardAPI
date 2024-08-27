@@ -33,6 +33,7 @@ dotenv.config();
 const DeckRoutes = require('./api/deck');
 const RegistrationRoutes = require('./api/registration');
 const LoginRoutes = require('./api/login');
+const UserRoutes = require('./api/user');
 
 // This line is for parsing incoming JSON requests
 // app.use(express.json());
@@ -68,7 +69,7 @@ db.connect((err) => {
 app.use('/api/deck', DeckRoutes);
 app.use('/api/registration', RegistrationRoutes);
 app.use('/api/login', LoginRoutes);
-
+app.use('/api/user', UserRoutes);
 // Enable CORS for the /login route
 // app.options('/login', cors()); // Handle preflight request
 // app.post('/login', cors(), async (req, res) => {
@@ -159,6 +160,9 @@ app.post('/login', cors(), async (req, res) => {
             //     return res.json({ Error: "Password not matched" });
             // }
             // console.log("req.body.password: ", req.body.password);
+
+            // first param is plaintext (will be hashed by bcrypt),
+            // second param is the hash.
             bcrypt.compare(req.body.password, data[0].password, (err, response) => {
                 console.log("Hashed Password from Database:", data[0].password);
                 console.log("Password Sent during Login:", req.body.password.toString());
@@ -226,9 +230,12 @@ app.get('/test', cors(), (req, res) => {
     res.status(200).json('Welcome, api is up on vercel');
 });
 
+// app.get('/logout', (req, res) => { 
 app.post('/logout', (req, res) => {
+    console.log("thanks for using CardMentor! logging out...");
     try {
-        res.clearCookie('user_token');
+        console.log("req.session: ", req);
+        // res.clearCookie('user_token');
         return res.json({ Status: "Success" });
     } catch (error) {
         console.error('Error during logout:', error);

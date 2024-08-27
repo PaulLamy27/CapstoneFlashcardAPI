@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS deck (id INT NOT NULL AUTO_INCREMENT, title VARCHAR(5
 ALTER TABLE deck MODIFY COLUMN createdOn DATETIME DEFAULT CURRENT_TIMESTAMP;
 ALTER TABLE deck MODIFY COLUMN isPublic BOOLEAN DEFAULT TRUE;
 describe deck;
-
+select * from deck;
 CREATE TABLE IF NOT EXISTS user (id INT NOT NULL AUTO_INCREMENT, firstName VARCHAR(50), lastName VARCHAR(50), email VARCHAR(50), username VARCHAR(50), password VARCHAR(50), PRIMARY KEY (id));
-select * from user
-;
+describe user;
+ALTER TABLE user MODIFY COLUMN password VARCHAR(60);
+select * from user;

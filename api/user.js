@@ -24,7 +24,6 @@ router.get("/search/:username", async (req, res) => {
                 const extractedResults = results.map((row) => ({
                     id: row.id,
                     username: row.username,
-                    // email: row.email,
                 }));
                 res.json(extractedResults);
             }
