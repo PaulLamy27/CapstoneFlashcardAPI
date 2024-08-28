@@ -234,7 +234,7 @@ select title from deck where isPublic and userId = (select id from user where us
 */
 router.get('/publicdecks/:username', cors(), async (req, res) => {
     try {
-	const username = req.params.username;
+        const username = req.params.username;
         res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header('Access-Control-Allow-Credentials', true);
 
@@ -331,6 +331,11 @@ router.post('/:title/:isPublic', async (req, res) => {
         let cookie = req.cookies.token;
         let decodedCookie = jwt.verify(cookie, "jwt-secret-key");
         let userId = decodedCookie.id;
+        console.log("cookie: ", cookie);
+        console.log("decodedcookie: ", decodedCookie);
+        console.log("userId: ", userId);
+        console.log("title: ", title);
+        console.log("isPublic: ", isPublic);
         let sql = 'UPDATE deck SET isPublic = ? WHERE title = ? AND userId = ?';
         let params = [isPublic, title, userId];
         await new Promise((resolve, reject) => {
