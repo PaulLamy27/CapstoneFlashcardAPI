@@ -322,9 +322,9 @@ router.post('/:title/card', async (req, res) => {
 })
 
 // toggling if a deck is public or not
-router.post('/:title/:isPublic', async (req, res) => {
+router.post('/:title', async (req, res) => {
     let title = req.params.title;
-    let isPublic = req.params.isPublic;
+    let isPublic = req.query.isPublic;
     res.header('Access-Control-Allow-Origin', req.headers.origin);
     res.header('Access-Control-Allow-Credentials', true);
     try {
@@ -348,8 +348,9 @@ router.post('/:title/:isPublic', async (req, res) => {
                 }
             });
         });
-        res.send("success");
+        res.status(200).send("success");
     } catch (error) {
+        console.error("Error occured in trycatch: ", error);
         res.sendStatus(500);
     }
 })
