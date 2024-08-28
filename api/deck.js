@@ -322,9 +322,9 @@ router.post('/:title/card', async (req, res) => {
 })
 
 // toggling if a deck is public or not
-router.post('/:title', async (req, res) => {
+router.post('/:title/:isPublic', async (req, res) => {
     let title = req.params.title;
-    let isPublic = req.query.isPublic;
+    let isPublic = req.params.isPublic;
     res.header('Access-Control-Allow-Origin', req.headers.origin);
     res.header('Access-Control-Allow-Credentials', true);
     try {
