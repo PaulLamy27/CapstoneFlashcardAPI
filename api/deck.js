@@ -325,25 +325,10 @@ router.post('/:title/card', async (req, res) => {
 router.post('/:title', async (req, res) => {
     let title = req.params.title;
     let isPublic = req.query.isPublic;
+    let userId = req.query.userId;
     res.header('Access-Control-Allow-Origin', req.headers.origin);
     res.header('Access-Control-Allow-Credentials', true);
     try {
-        // Extract the token from the Authorization header
-        const authHeader = req.headers.authorization;
-        if (!authHeader) {
-            return res.status(401).json({ message: "Authorization header missing" });
-        }
-
-        const token = authHeader.split(' ')[1];
-        if (!token) {
-            return res.status(401).json({ message: "Token missing" });
-        }
-
-        let cookie = req.cookies.token;
-        let decodedCookie = jwt.verify(cookie, "jwt-secret-key");
-        let userId = decodedCookie.id;
-        console.log("cookie: ", cookie);
-        console.log("decodedcookie: ", decodedCookie);
         console.log("userId: ", userId);
         console.log("title: ", title);
         console.log("isPublic: ", isPublic);
