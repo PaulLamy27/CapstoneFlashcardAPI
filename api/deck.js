@@ -328,6 +328,17 @@ router.post('/:title', async (req, res) => {
     res.header('Access-Control-Allow-Origin', req.headers.origin);
     res.header('Access-Control-Allow-Credentials', true);
     try {
+        // Extract the token from the Authorization header
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            return res.status(401).json({ message: "Authorization header missing" });
+        }
+
+        const token = authHeader.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: "Token missing" });
+        }
+
         let cookie = req.cookies.token;
         let decodedCookie = jwt.verify(cookie, "jwt-secret-key");
         let userId = decodedCookie.id;
@@ -360,17 +371,6 @@ router.delete('/:title', async (req, res) => {
     const title = req.params.title;
 
     try {
-        // Extract the token from the Authorization header
-        const authHeader = req.headers.authorization;
-        if (!authHeader) {
-            return res.status(401).json({ message: "Authorization header missing" });
-        }
-
-        const token = authHeader.split(' ')[1];
-        if (!token) {
-            return res.status(401).json({ message: "Token missing" });
-        }
-
         res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header('Access-Control-Allow-Credentials', true);
 
